@@ -1,15 +1,16 @@
 require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const ai = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_KEY);
+const apiKey = process.env.GOOGLE_GEMINI_KEY || process.env.GEMINI_API_KEY;
+const ai = new GoogleGenerativeAI(apiKey);
 
 async function aiService(prompt) {
   try {
-    if (!process.env.GOOGLE_GEMINI_KEY) {
-      throw new Error("❌ GOOGLE_GEMINI_KEY is missing from .env");
+    if (!apiKey) {
+      throw new Error("GOOGLE_GEMINI_KEY or GEMINI_API_KEY is missing from .env");
     }
 
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = ai.getGenerativeModel({ model: "gemini-flash-latest" });
 
     // ✅ Only pass the text directly
     const result = await model.generateContent([

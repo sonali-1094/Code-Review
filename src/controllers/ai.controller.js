@@ -1,16 +1,17 @@
 const aiService = require("../services/ai.service");
 
-module.exports.getReview = async (req, res) => {
+exports.getReview = async (req, res) => {
   try {
-    const { code } = req.body;
-    if (!code) {
-      return res.status(400).json({ error: "Code snippet is required" });
+    const { text } = req.body;
+
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: "Text is required" });
     }
 
-    const review = await aiService(code);
-    res.json({ review });
-  } catch (err) {
-    console.error("AI Service Error:", err);
-    res.status(500).json({ error: "Something went wrong while processing the request." });
+    const review = await aiService(text);
+    return res.status(200).json({ review });
+  } catch (error) {
+    console.error("AI Error:", error.message || error);
+    return res.status(500).json({ error: "AI review failed" });
   }
 };
